@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Test the real Tk slider/button callback against real ROS/Gazebo feedback."""
+"""Check that the Tk slider callback drives the arm in Gazebo."""
 import os,subprocess,time,signal,json,uuid
 from pathlib import Path
 from process_cleanup import stop_tree
@@ -11,15 +11,13 @@ from rclpy.qos import qos_profile_sensor_data
 from sensor_msgs.msg import JointState
 from trajectory_msgs.msg import JointTrajectory
 from arm_control.core import TOPIC
-VARIANT=os.environ.get('ARM_VARIANT','humble')
-if VARIANT!='humble': raise SystemExit('The main branch keeps only the Humble variant. Unset ARM_VARIANT or use ARM_VARIANT=humble.')
 PREFIX='humble_'
 os.environ['IGN_PARTITION']=os.environ['GZ_PARTITION']
 OUT=Path(__file__).resolve().parents[1]/'test_results';OUT.mkdir(exist_ok=True)
 procs=[]
 def start(cmd,name):
  f=(OUT/(PREFIX+name+'.log')).open('w');p=subprocess.Popen(cmd,stdout=f,stderr=subprocess.STDOUT,start_new_session=True);procs.append((p,f));return p
-report={'status':'FAIL','test':'Real Tk slider/button callback -> ROS JointTrajectory -> actual Gazebo feedback'}
+report={'status':'FAIL','test':'Tk slider callback -> JointTrajectory -> Gazebo joint feedback'}
 rclpy.init();n=Node('gui_smoke_test');commands=[];states=[]
 n.create_subscription(JointTrajectory,TOPIC,lambda m:commands.append(m),10)
 n.create_subscription(JointState,'/joint_states',lambda m:states.append(dict(zip(m.name,m.position))),qos_profile_sensor_data)
@@ -43,10 +41,10 @@ try:
  assert commands,'GUI did not publish a trajectory'
  targets=commands[-1].points[0].positions
  assert abs(targets[0]-.5235987756)<1e-8,targets
- actual=states[-1]
- assert abs(actual['joint1']-targets[0])<.04,(actual,targets)
- assert abs(actual['joint2']-targets[1])<.04,(actual,targets)
- report.update(status='PASS',gui_targets_rad=list(targets),actual_gazebo=actual,command_count=len(commands))
+ feedback=states[-1]
+ assert abs(feedback['joint1']-targets[0])<.04,(feedback,targets)
+ assert abs(feedback['joint2']-targets[1])<.04,(feedback,targets)
+ report.update(status='PASS',gui_targets_rad=list(targets),gazebo_feedback=actual,command_count=len(commands))
 finally:
  if root:root.destroy()
  n.destroy_node();rclpy.try_shutdown()

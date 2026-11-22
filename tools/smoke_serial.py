@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Real ROS subscription + pyserial PTY integration. No physical board claimed."""
+"""ROS subscription and pyserial test over a pseudo-terminal. No physical board is used."""
 import os,pty,select,time,json,signal,subprocess
 from pathlib import Path
 from process_cleanup import stop_tree
@@ -15,7 +15,7 @@ master,slave=pty.openpty();port=os.ttyname(slave)
 f=(OUT/(PREFIX+'serial_pty.log')).open('w')
 p=subprocess.Popen(['ros2','run','arm_hardware','serial_bridge','--ros-args','-p','dry_run:=false','-p','port:='+port],stdout=f,stderr=subprocess.STDOUT,start_new_session=True)
 rclpy.init();n=Node('serial_pipeline_test');pub=n.create_publisher(JointTrajectory,TOPIC,10)
-packets=[];buf=b'';report={'status':'FAIL','test':'Real ROS + pyserial pseudoterminal; not physical servos'}
+packets=[];buf=b'';report={'status':'FAIL','test':'ROS + pyserial pseudo-terminal test (no physical servos)'}
 try:
  end=time.monotonic()+12
  while not pub.get_subscription_count() and time.monotonic()<end:rclpy.spin_once(n,timeout_sec=.1)

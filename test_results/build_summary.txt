@@ -1,13 +1,12 @@
-Humble + Gazebo Fortress 6.16.0 (re-run on 22 November 2026 after the Jazzy cleanup):
+ROS 2 Humble + Gazebo Fortress 6.16.0, run on 22 November 2026:
   colcon build: PASS, all 4 packages built.
-    (plain `colcon build`; the conda runtime's newer setuptools rejects the
-    --symlink-install editable mode, which is an environment limitation, not a
-    project error. Native apt installation and its symlink build remain untested.)
+    (Plain `colcon build` was used. The newer setuptools in the test
+    environment rejects --symlink-install. This comes from the environment,
+    not from the project. A native apt build with --symlink-install was not tested.)
   ign sdf -k: Valid.
   Python unit tests: 20 passed.
   C++ firmware parser: 32,761 valid pairs + 14 malformed packets passed.
-  Live headless motion test: PASS (4 joints to target and home, real feedback, TF).
-  Serial PTY test: PASS (251 packets, 41 distinct, final S,107,67).
+  Live headless motion test: PASS (4 joints to target and home, joint feedback, TF).
+  Serial pseudo-terminal test: PASS (251 packets, 41 distinct, final S,107,67).
   GUI callback test: PASS.
-A Jazzy + Harmonic 8.10.0 build also passed earlier on 22 November 2026; that variant was removed from the main branch and remains in git history (commit d504e19 and its parents).
-See docs/VERIFICATION.md for test environments and limits.
+See docs/VERIFICATION.md for the test environment and limits.

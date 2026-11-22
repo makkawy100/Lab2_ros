@@ -2,8 +2,6 @@
 import os, subprocess, time, signal
 from pathlib import Path
 from process_cleanup import stop_tree
-VARIANT=os.environ.get('ARM_VARIANT','humble')
-if VARIANT!='humble': raise SystemExit('The main branch keeps only the Humble variant. Unset ARM_VARIANT or use ARM_VARIANT=humble.')
 PREFIX='humble_'
 os.environ['ROS_DOMAIN_ID']='74'
 os.environ['GZ_PARTITION']='arm_visual_test'
@@ -41,4 +39,4 @@ finally:
  for p,f in reversed(procs):
   stop_tree(p)
   f.close()
-print('Saved actual UI screenshots to',OUT)
+print('Saved screenshots to',OUT)

@@ -1,14 +1,12 @@
-# Humble + Gazebo Fortress: Ubuntu 22.04
+# Setup notes: Ubuntu 22.04, ROS 2 Humble, Gazebo Fortress
 
-دي النسخة المناسبة لجهازك لو عليه ROS 2 Humble بالفعل. مش محتاج تشيل Humble أو تنزل Jazzy عشان تجربها. Humble هو الهدف الأساسي والوحيد للمشروع على الفرع الرئيسي.
+This is the only configuration the project supports. It uses Gazebo Fortress (`ign gazebo`, Gazebo Sim 6), the version officially paired with Humble. It does not use Gazebo Classic (`gazebo`).
 
-The PDF recommends Jazzy with modern Gazebo, but does not state Jazzy is mandatory. This project uses **Humble + Gazebo Fortress (`ign gazebo`, version 6)**, the officially supported pairing for Humble. It is not Gazebo Classic (`gazebo`).
-
-An earlier Jazzy/Harmonic variant was removed from the main branch at the owner's request. It remains in git history (commit `d504e19` and its parents) if it is ever needed again.
+Install the standard `ros-humble-ros-gz` package only. Other Gazebo and ROS combinations can conflict with the Fortress packages.
 
 ## Install and build
 
-Use a fresh terminal with only Humble sourced. These commands assume ROS 2 Humble and its apt repository are already installed on native Ubuntu 22.04.
+Use a fresh terminal with only Humble sourced.
 
 ```bash
 source /opt/ros/humble/setup.bash
@@ -20,8 +18,7 @@ sudo apt install -y ros-humble-ros-gz ros-humble-rviz2 \
 cd ~
 git clone https://github.com/makkawy100/Lab2_ros.git ros2-robotic-arm
 cd ros2-robotic-arm
-# If this repository was already cloned, use git pull instead of cloning again.
-# Only if rosdep was never initialized before:
+# Only needed the first time rosdep is used:
 # sudo rosdep init
 rosdep update
 rosdep install --from-paths src --ignore-src -r -y --rosdistro humble
@@ -30,7 +27,7 @@ source install/setup.bash
 ros2 launch arm_simulation simulation_humble.launch.py
 ```
 
-Expected: Gazebo Fortress opens with the arm, RViz2 opens with `base_link` fixed frame and RobotModel. No physical servo is enabled.
+Expected result: Gazebo Fortress opens with the arm, and RViz2 opens with `base_link` as the fixed frame and a RobotModel display. No servo is enabled.
 
 In a second terminal:
 
@@ -41,79 +38,79 @@ source install/setup.bash
 ros2 run arm_control sliders
 ```
 
-غيّر joint1 إلى 20 درجة وjoint2 إلى -20، وسيب الوقت 3 ثواني، وبعدها اضغط **Send trajectory**. الحركة تظهر في Gazebo وRViz2 مع بعض.
+Set joint1 to 20 degrees and joint2 to -20 degrees, keep the duration at 3 seconds and press **Send trajectory**. The arm should move in Gazebo and RViz2 at the same time.
 
-Or use one command:
+Without the GUI:
 
 ```bash
 ros2 run arm_control trajectory_publisher --ros-args \
   -p 'positions:=[0.3, -0.4, 0.5, -0.2]' -p duration:=3.0
 ```
 
-## Hardware, after safe wiring/upload
+## Hardware
 
-The same firmware/protocol/pin table in the main README applies. Start with dry-run:
+The firmware, protocol and pin table are described in the main README. Start in dry-run mode:
 
 ```bash
 ros2 launch arm_simulation simulation_humble.launch.py \
   hardware:=true dry_run:=true
 ```
 
-After uploading the sketch, checking D9/D10 and common ground, external servo power, safe neutral and direction, stop the previous launch and enable serial:
+Once the sketch is uploaded and D9, D10, common ground, external servo power, neutral position and direction have been checked, stop that launch and enable the serial output:
 
 ```bash
 ros2 launch arm_simulation simulation_humble.launch.py \
   hardware:=true dry_run:=false port:=/dev/ttyACM0
 ```
 
-The two real servos are joint1 and joint2; all four joints move in simulation. **Actual board upload and servo movement are not verified by this repository's software tests.**
+The two physical servos are joint1 and joint2. All four joints move in simulation. Board upload and servo movement have not been tested.
 
-## Headless and rerunnable tests
+## Headless runs and tests
 
 ```bash
 ros2 launch arm_simulation simulation_humble.launch.py headless:=true rviz:=false
-# Stop that launch before running the self-contained tests below.
+# Stop this launch before running the tests below.
 ```
 
-After sourcing the workspace:
+With the workspace sourced:
 
 ```bash
 python3 -m unittest discover -s tests -v
 ign sdf -k src/arm_simulation/worlds/arm_world_fortress.sdf
 python3 tools/smoke_simulation.py
 python3 tools/smoke_serial.py
-# Optional actual Tk callback test on a virtual display:
+# Optional, runs the slider callback on a virtual display:
 sudo apt install -y xvfb
 python3 tools/smoke_gui.py
 ```
 
-Rebuild the Fortress world after a URDF change:
+After a URDF change, rebuild the world:
 
 ```bash
 python3 tools/generate_world.py
 colcon build --symlink-install
 ```
 
-## Version notes
+## Version summary
 
-| Item | This project |
+| Item | Value |
 |---|---|
 | Ubuntu | 22.04 |
 | ROS | Humble |
-| Project launch | `simulation_humble.launch.py` |
+| Launch file | `simulation_humble.launch.py` |
 | Simulator command | `ign gazebo` |
 | World | `arm_world_fortress.sdf` |
-| Bridge config | `bridge_fortress.yaml` |
-| Transport types | `ignition.msgs.*` |
+| Bridge configuration | `bridge_fortress.yaml` |
+| Transport message types | `ignition.msgs.*` |
 
-Do not install `ros-humble-ros-gzharmonic` for this project. That is a non-default Humble/Harmonic pairing and can conflict with the official Humble/Fortress packages.
+## What was tested
 
-## What was actually tested
+The package build, SDF validation, joint motion, TF output, the slider callback test and the serial pseudo-terminal test were run against a Humble and Fortress 6.16.0 environment on Linux that was not a plain apt installation. The firmware was compiled for an Uno but not uploaded. Real servos and USB hardware are untested. Details and limits are in [VERIFICATION.md](VERIFICATION.md).
 
-A real **Humble + Fortress 6.16.0** runtime was provisioned using RoboStack/conda on Linux. All four packages built, the SDF validated, all four joints moved to target and back from the assignment topic, Gazebo feedback and TF were received, the Tk callback test passed and the real pyserial pseudoterminal test passed. Actual Gazebo and RViz2 images were inspected before/after a command.
+## Troubleshooting
 
-This was not a clean apt-based installation on the student's machine. Firmware was compiled for Uno, not uploaded to a physical board. Actual servos and USB hardware remain to be tested. See [full verification](VERIFICATION.md).
+- If the Gazebo window is blank, set `LIBGL_ALWAYS_SOFTWARE=1` before launching.
+- If nodes from an earlier run show up or discovery looks stale, close other runs and open a fresh terminal.
+- If you stop Gazebo, stop the whole launch before starting another one. Two simulators on the same topics will interfere with each other.
 
-If Gazebo opens but is blank, try setting `LIBGL_ALWAYS_SOFTWARE=1` before launching. If DDS discovery is stale, close other project runs and use a fresh terminal. If you stop Gazebo, stop the whole launch before starting a new one; do not leave two simulators controlling the same topics.
-
-Official simulator pairing/install source: https://gazebosim.org/docs/fortress/ros_installation/
+Gazebo and ROS pairing reference: https://gazebosim.org/docs/fortress/ros_installation/

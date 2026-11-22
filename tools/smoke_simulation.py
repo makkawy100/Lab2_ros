@@ -20,8 +20,6 @@ from trajectory_msgs.msg import JointTrajectory
 from arm_control.publisher import message
 from arm_control.core import TOPIC, JOINTS
 ROOT=Path(__file__).resolve().parents[1]
-VARIANT=os.environ.get('ARM_VARIANT','humble')
-if VARIANT!='humble': raise SystemExit('The main branch keeps only the Humble variant. Unset ARM_VARIANT or use ARM_VARIANT=humble.')
 PREFIX='humble_'
 os.environ['IGN_PARTITION']=os.environ['GZ_PARTITION']
 OUT=ROOT/'test_results';OUT.mkdir(exist_ok=True)
@@ -34,12 +32,12 @@ def main():
     n.create_subscription(JointState,'/joint_states',lambda m: states.append((time.monotonic(),dict(zip(m.name,m.position)))),qos_profile_sensor_data)
     n.create_subscription(TFMessage,'/tf',lambda m: transforms.update(t.child_frame_id for t in m.transforms),10)
     pub=n.create_publisher(JointTrajectory,TOPIC,10)
-    report={'test':'Real ROS 2 '+VARIANT+' + Gazebo headless motion, not mocked','status':'FAIL'}
+    report={'test':'ROS 2 humble + Gazebo headless motion test','status':'FAIL'}
     try:
         end=time.monotonic()+45
         while (not states or pub.get_subscription_count()<2) and time.monotonic()<end:
             rclpy.spin_once(n,timeout_sec=0.1)
-        assert states, 'No actual Gazebo joint feedback'
+        assert states, 'No Gazebo joint feedback'
         baseline=states[-1][1]
         target=[0.3,-0.4,0.5,-0.2]
         pub.publish(message(target,3.0)); sent=time.monotonic()
@@ -51,7 +49,7 @@ def main():
         assert max(error.values())<0.04, f'Target not reached: {error}'
         assert all(v>0.1 for v in changed.values()), f'No movement: {changed}'
         assert set(('L1','L2','L3','end_effector'))<=transforms, f'Missing TF: {transforms}'
-        # A second command tests ongoing control, not a lucky static pose.
+        # A second command checks that the arm keeps responding.
         pub.publish(message([0.,0.,0.,0.],2.0)); sent=time.monotonic()
         while time.monotonic()-sent<4:rclpy.spin_once(n,timeout_sec=0.02)
         home=states[-1][1]

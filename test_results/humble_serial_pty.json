@@ -1,6 +1,6 @@
 {
   "status": "PASS",
-  "test": "Real ROS + pyserial pseudoterminal; not physical servos",
+  "test": "ROS + pyserial pseudo-terminal test (no physical servos)",
   "packet_count": 251,
   "distinct_packets": 41,
   "first": "S,90,90",

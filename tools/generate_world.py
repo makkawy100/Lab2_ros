@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Rebuild committed world from URDF using Gazebo's actual URDF->SDF converter."""
+"""Rebuild committed world from URDF with Gazebo's URDF to SDF converter."""
 from pathlib import Path
 import subprocess
 import argparse

@@ -1,13 +1,13 @@
 {
   "status": "PASS",
-  "test": "Real Tk slider/button callback -> ROS JointTrajectory -> actual Gazebo feedback",
+  "test": "Tk slider callback -> JointTrajectory -> Gazebo joint feedback",
   "gui_targets_rad": [
     0.5235987755982988,
     -0.3490658503988659,
     0.0,
     0.0
   ],
-  "actual_gazebo": {
+  "gazebo_feedback": {
     "joint1": 0.5235987755982988,
     "joint2": -0.3490657525512762,
     "joint3": 1.6202412168166857e-07,

@@ -1,5 +1,5 @@
 {
-  "test": "Real ROS 2 humble + Gazebo headless motion, not mocked",
+  "test": "ROS 2 humble + Gazebo headless motion test",
   "status": "PASS",
   "initial": {
     "joint1": 0.0,
