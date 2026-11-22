@@ -1,0 +1,25 @@
+test_all_link_properties (test_core.DescriptionTests) ... ok
+test_chain (test_core.DescriptionTests) ... ok
+test_dimensions (test_core.DescriptionTests) ... ok
+test_four_revolute_joints (test_core.DescriptionTests) ... ok
+test_world (test_core.DescriptionTests) ... ok
+test_calibration (test_core.TrajectoryTests) ... ok
+test_clamp (test_core.TrajectoryTests) ... ok
+test_empty (test_core.TrajectoryTests) ... ok
+test_interpolation (test_core.TrajectoryTests) ... ok
+test_invalid_calibration (test_core.TrajectoryTests) ... ok
+test_multi_point (test_core.TrajectoryTests) ... ok
+test_nonmonotonic (test_core.TrajectoryTests) ... ok
+test_order (test_core.TrajectoryTests) ... ok
+test_preemption_continuity (test_core.TrajectoryTests) ... ok
+test_reject_bad_names (test_core.TrajectoryTests) ... ok
+test_reject_positions (test_core.TrajectoryTests) ... ok
+test_reject_time (test_core.TrajectoryTests) ... ok
+test_servo_mapping (test_core.TrajectoryTests) ... ok
+test_speed_limit (test_core.TrajectoryTests) ... ok
+test_wire (test_core.TrajectoryTests) ... ok
+
+----------------------------------------------------------------------
+Ran 20 tests in 0.003s
+
+OK

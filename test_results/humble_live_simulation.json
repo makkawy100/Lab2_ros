@@ -1,0 +1,42 @@
+{
+  "test": "Real ROS 2 humble + Gazebo headless motion, not mocked",
+  "status": "PASS",
+  "initial": {
+    "joint1": 0.0,
+    "joint2": 5.531580918576723e-12,
+    "joint3": 2.1813324056763043e-11,
+    "joint4": 1.818562325728301e-11
+  },
+  "target": [
+    0.3,
+    -0.4,
+    0.5,
+    -0.2
+  ],
+  "final": {
+    "joint1": 0.3,
+    "joint2": -0.3999999405061949,
+    "joint3": 0.5000001139570582,
+    "joint4": -0.19999999947537905
+  },
+  "absolute_error_rad": {
+    "joint1": 0.0,
+    "joint2": 5.949380510461566e-08,
+    "joint3": 1.1395705823424862e-07,
+    "joint4": 5.246209577869365e-10
+  },
+  "home": {
+    "joint1": 0.0,
+    "joint2": 1.0448163628096199e-07,
+    "joint3": 1.7372980233047883e-07,
+    "joint4": 1.379898293327447e-10
+  },
+  "feedback_samples": 9345,
+  "tf_children": [
+    "L1",
+    "L2",
+    "L3",
+    "end_effector"
+  ],
+  "trajectory_subscribers": 2
+}

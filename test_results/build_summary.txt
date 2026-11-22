@@ -1,0 +1,7 @@
+Jazzy + Gazebo Harmonic 8.10.0:
+  colcon build --symlink-install: PASS, all 4 packages built.
+  gz sdf -k: Valid.
+Humble + Gazebo Fortress 6.16.0:
+  colcon build with separate build/install bases: PASS, all 4 packages built.
+  ign sdf -k: Valid.
+See docs/VERIFICATION.md for test environments and limits.

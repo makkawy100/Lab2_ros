@@ -1,0 +1,42 @@
+{
+  "test": "Real ROS 2 jazzy + Gazebo headless motion, not mocked",
+  "status": "PASS",
+  "initial": {
+    "joint1": 0.0,
+    "joint2": 5.772067965519746e-12,
+    "joint3": 2.2761467759202504e-11,
+    "joint4": 1.8976611662266387e-11
+  },
+  "target": [
+    0.3,
+    -0.4,
+    0.5,
+    -0.2
+  ],
+  "final": {
+    "joint1": 0.3,
+    "joint2": -0.3999999405119331,
+    "joint3": 0.500000113967057,
+    "joint4": -0.19999999948705774
+  },
+  "absolute_error_rad": {
+    "joint1": 0.0,
+    "joint2": 5.9488066916912885e-08,
+    "joint3": 1.139670570138307e-07,
+    "joint4": 5.12942271990724e-10
+  },
+  "home": {
+    "joint1": 0.0,
+    "joint2": 1.0448010283553934e-07,
+    "joint3": 1.737449800927445e-07,
+    "joint4": 1.2424171498895413e-10
+  },
+  "feedback_samples": 8647,
+  "tf_children": [
+    "L1",
+    "L2",
+    "L3",
+    "end_effector"
+  ],
+  "trajectory_subscribers": 2
+}

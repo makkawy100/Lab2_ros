@@ -1,0 +1,348 @@
+<sdf version="1.9">
+  <world name="arm_world">
+    <gravity>0 0 -9.81</gravity>
+    <physics name="default" type="ignored">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+    </physics>
+    <plugin filename="gz-sim-physics-system" name="gz::sim::systems::Physics" />
+    <plugin filename="gz-sim-user-commands-system" name="gz::sim::systems::UserCommands" />
+    <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster" />
+    <light name="sun" type="directional">
+      <pose>0 0 5 0 0 0</pose>
+      <diffuse>0.9 0.9 0.9 1</diffuse>
+      <specular>0.3 0.3 0.3 1</specular>
+      <direction>-0.5 0.2 -1</direction>
+      <cast_shadows>true</cast_shadows>
+    </light>
+    <model name="ground">
+      <static>true</static>
+      <link name="ground_link">
+        <visual name="plane_visual">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>2 2</size>
+            </plane>
+          </geometry>
+          <material>
+            <ambient>0.65 0.68 0.7 1</ambient>
+            <diffuse>0.65 0.68 0.7 1</diffuse>
+          </material>
+        </visual>
+        <collision name="plane_collision">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>2 2</size>
+            </plane>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="assignment_arm">
+      <link name="base_link">
+        <inertial>
+          <pose>0 0 0.040000000000000001 0 0 0</pose>
+          <mass>0.40000000000000002</mass>
+          <inertia>
+            <ixx>0.00037333333333333337</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.00037333333333333337</iyy>
+            <iyz>0</iyz>
+            <izz>0.00032000000000000003</izz>
+          </inertia>
+        </inertial>
+        <collision name="base_link_collision">
+          <pose>0 0 0.040000000000000001 0 0 0</pose>
+          <geometry>
+            <cylinder>
+              <length>0.080000000000000002</length>
+              <radius>0.040000000000000001</radius>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="base_link_visual">
+          <pose>0 0 0.040000000000000001 0 0 0</pose>
+          <geometry>
+            <cylinder>
+              <length>0.080000000000000002</length>
+              <radius>0.040000000000000001</radius>
+            </cylinder>
+          </geometry>
+          <material>
+            <diffuse>0.225000009 0.275000006 0.349999994 1</diffuse>
+            <ambient>0.225000009 0.275000006 0.349999994 1</ambient>
+          </material>
+        </visual>
+      </link>
+      <joint name="joint1" type="revolute">
+        <pose relative_to="base_link">0 0 0.080000000000000002 0 0 0</pose>
+        <parent>base_link</parent>
+        <child>L1</child>
+        <axis>
+          <xyz>0 0 1</xyz>
+          <limit>
+            <lower>-1.57079632679</lower>
+            <upper>1.57079632679</upper>
+            <effort>5</effort>
+            <velocity>1.5</velocity>
+          </limit>
+          <dynamics>
+            <damping>0.10000000000000001</damping>
+            <friction>0.02</friction>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+        </axis>
+      </joint>
+      <link name="L1">
+        <pose relative_to="joint1">0 0 0 0 0 0</pose>
+        <inertial>
+          <pose>0 0 0.059999999999999998 0 0 0</pose>
+          <mass>0.12</mass>
+          <inertia>
+            <ixx>0.00015024999999999999</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.00015024999999999999</iyy>
+            <iyz>0</iyz>
+            <izz>1.2500000000000001e-05</izz>
+          </inertia>
+        </inertial>
+        <collision name="L1_collision">
+          <pose>0 0 0.059999999999999998 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.025000000000000001 0.025000000000000001 0.12</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="L1_visual">
+          <pose>0 0 0.059999999999999998 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.025000000000000001 0.025000000000000001 0.12</size>
+            </box>
+          </geometry>
+          <material>
+            <diffuse>0.125 0.6875 1 1</diffuse>
+            <ambient>0.125 0.6875 1 1</ambient>
+          </material>
+        </visual>
+      </link>
+      <joint name="joint2" type="revolute">
+        <pose relative_to="L1">0 0 0.12 0 0 0</pose>
+        <parent>L1</parent>
+        <child>L2</child>
+        <axis>
+          <xyz>0 1 0</xyz>
+          <limit>
+            <lower>-1.57079632679</lower>
+            <upper>1.57079632679</upper>
+            <effort>5</effort>
+            <velocity>1.5</velocity>
+          </limit>
+          <dynamics>
+            <damping>0.10000000000000001</damping>
+            <friction>0.02</friction>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+        </axis>
+      </joint>
+      <link name="L2">
+        <pose relative_to="joint2">0 0 0 0 0 0</pose>
+        <inertial>
+          <pose>0.074999999999999997 0 0 0 0 0</pose>
+          <mass>0.12</mass>
+          <inertia>
+            <ixx>1.2500000000000001e-05</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.00023125000000000001</iyy>
+            <iyz>0</iyz>
+            <izz>0.00023125000000000001</izz>
+          </inertia>
+        </inertial>
+        <collision name="L2_collision">
+          <pose>0.074999999999999997 0 0 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.14999999999999999 0.025000000000000001 0.025000000000000001</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="L2_visual">
+          <pose>0.074999999999999997 0 0 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.14999999999999999 0.025000000000000001 0.025000000000000001</size>
+            </box>
+          </geometry>
+          <material>
+            <diffuse>0.125 0.875 0.81249994 1</diffuse>
+            <ambient>0.125 0.875 0.81249994 1</ambient>
+          </material>
+        </visual>
+      </link>
+      <joint name="joint3" type="revolute">
+        <pose relative_to="L2">0.14999999999999999 0 0 0 0 0</pose>
+        <parent>L2</parent>
+        <child>L3</child>
+        <axis>
+          <xyz>0 1 0</xyz>
+          <limit>
+            <lower>-1.57079632679</lower>
+            <upper>1.57079632679</upper>
+            <effort>5</effort>
+            <velocity>1.5</velocity>
+          </limit>
+          <dynamics>
+            <damping>0.10000000000000001</damping>
+            <friction>0.02</friction>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+        </axis>
+      </joint>
+      <link name="L3">
+        <pose relative_to="joint3">0 0 0 0 0 0</pose>
+        <inertial>
+          <pose>0.044999999999999998 0 0 0 0 0</pose>
+          <mass>0.080000000000000002</mass>
+          <inertia>
+            <ixx>6.4533333333333323e-06</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>5.7226666666666659e-05</iyy>
+            <iyz>0</iyz>
+            <izz>5.7226666666666659e-05</izz>
+          </inertia>
+        </inertial>
+        <collision name="L3_collision">
+          <pose>0.044999999999999998 0 0 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.089999999999999997 0.021999999999999999 0.021999999999999999</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="L3_visual">
+          <pose>0.044999999999999998 0 0 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.089999999999999997 0.021999999999999999 0.021999999999999999</size>
+            </box>
+          </geometry>
+          <material>
+            <diffuse>1 0.75000006 0.125 1</diffuse>
+            <ambient>1 0.75000006 0.125 1</ambient>
+          </material>
+        </visual>
+      </link>
+      <joint name="joint4" type="revolute">
+        <pose relative_to="L3">0.089999999999999997 0 0 0 0 0</pose>
+        <parent>L3</parent>
+        <child>end_effector</child>
+        <axis>
+          <xyz>0 1 0</xyz>
+          <limit>
+            <lower>-1.57079632679</lower>
+            <upper>1.57079632679</upper>
+            <effort>5</effort>
+            <velocity>1.5</velocity>
+          </limit>
+          <dynamics>
+            <damping>0.10000000000000001</damping>
+            <friction>0.02</friction>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+        </axis>
+      </joint>
+      <link name="end_effector">
+        <pose relative_to="joint4">0 0 0 0 0 0</pose>
+        <inertial>
+          <pose>0.029999999999999999 0 0 0 0 0</pose>
+          <mass>0.040000000000000001</mass>
+          <inertia>
+            <ixx>3.6933333333333341e-06</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>1.308e-05</iyy>
+            <iyz>0</iyz>
+            <izz>1.461333333333333e-05</izz>
+          </inertia>
+        </inertial>
+        <collision name="end_effector_collision">
+          <pose>0.029999999999999999 0 0 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.059999999999999998 0.028000000000000001 0.017999999999999999</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="end_effector_visual">
+          <pose>0.029999999999999999 0 0 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.059999999999999998 0.028000000000000001 0.017999999999999999</size>
+            </box>
+          </geometry>
+          <material>
+            <diffuse>1 0.3125 0.25 1</diffuse>
+            <ambient>1 0.3125 0.25 1</ambient>
+          </material>
+        </visual>
+      </link>
+      <joint name="mount_to_world" type="fixed">
+        <parent>world</parent>
+        <child>base_link</child>
+      </joint>
+      <plugin filename="gz-sim-joint-position-controller-system" name="gz::sim::systems::JointPositionController">
+        <joint_name>joint1</joint_name>
+        <topic>/sim/joint1/cmd_pos</topic>
+        <use_velocity_commands>true</use_velocity_commands>
+        <cmd_max>1.5</cmd_max>
+      </plugin>
+      <plugin filename="gz-sim-joint-position-controller-system" name="gz::sim::systems::JointPositionController">
+        <joint_name>joint2</joint_name>
+        <topic>/sim/joint2/cmd_pos</topic>
+        <use_velocity_commands>true</use_velocity_commands>
+        <cmd_max>1.5</cmd_max>
+      </plugin>
+      <plugin filename="gz-sim-joint-position-controller-system" name="gz::sim::systems::JointPositionController">
+        <joint_name>joint3</joint_name>
+        <topic>/sim/joint3/cmd_pos</topic>
+        <use_velocity_commands>true</use_velocity_commands>
+        <cmd_max>1.5</cmd_max>
+      </plugin>
+      <plugin filename="gz-sim-joint-position-controller-system" name="gz::sim::systems::JointPositionController">
+        <joint_name>joint4</joint_name>
+        <topic>/sim/joint4/cmd_pos</topic>
+        <use_velocity_commands>true</use_velocity_commands>
+        <cmd_max>1.5</cmd_max>
+      </plugin>
+      <plugin filename="gz-sim-joint-state-publisher-system" name="gz::sim::systems::JointStatePublisher">
+        <topic>/arm/joint_state</topic>
+        <update_rate>50</update_rate>
+        <joint_name>joint1</joint_name>
+        <joint_name>joint2</joint_name>
+        <joint_name>joint3</joint_name>
+        <joint_name>joint4</joint_name>
+      </plugin>
+    </model>
+    <gui fullscreen="false">
+      <plugin filename="MinimalScene" name="3D View">
+        <engine>ogre2</engine>
+        <scene>scene</scene>
+        <ambient_light>0.5 0.5 0.5</ambient_light>
+        <background_color>0.85 0.88 0.92</background_color>
+        <camera_pose>0.65 -0.7 0.55 0 0.35 2.35</camera_pose>
+      </plugin>
+      <plugin filename="GzSceneManager" name="Scene Manager" />
+    </gui>
+  </world>
+</sdf>
