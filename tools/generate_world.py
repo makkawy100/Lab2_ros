@@ -4,7 +4,7 @@ from pathlib import Path
 import subprocess
 import argparse
 import xml.etree.ElementTree as E
-args=argparse.ArgumentParser();args.add_argument('--variant',choices=['harmonic','fortress'],default='fortress');variant=args.parse_args().variant
+args=argparse.ArgumentParser();args.add_argument('--variant',choices=['fortress'],default='fortress');variant=args.parse_args().variant
 ROOT=Path(__file__).resolve().parents[1]
 urdf=ROOT/'src/arm_description/urdf/arm.urdf'
 result=subprocess.run(['ign' if variant=='fortress' else 'gz','sdf','-p',str(urdf)],check=True,capture_output=True,text=True)

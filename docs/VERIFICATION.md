@@ -48,7 +48,7 @@ Verified on 22 November 2026. Read this together with the README, not as a claim
 
 The `humble_`-prefixed evidence in `test_results/` is Humble/Fortress; firmware/parser tests are distro-independent. Native apt installation was not tested.
 
-1. `colcon build --symlink-install`: all four packages built under Humble.
+1. `colcon build`: all four packages built under Humble in this cleanup re-run. The newer conda setuptools rejected `--symlink-install`; native apt installation and its symlink build were not re-tested.
 2. `ign sdf -k` (Fortress): committed world valid.
 3. Python unit tests: **20 passed**, including names, times, finite numbers, limits, interpolation, preemption, servo conversion and URDF dimensions/properties.
 4. C++ firmware parser: all **32,761 valid two-servo angle pairs** plus **14 malformed packets** passed.
