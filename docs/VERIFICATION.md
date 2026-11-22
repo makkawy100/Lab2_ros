@@ -42,7 +42,7 @@ Verified on 22 November 2026. Read this together with the README, not as a claim
 | 5.5 | GUI command simultaneously moves simulation/RViz/real servos | Software branches tested; same launch/topic wiring provided. Full physical demonstration remains unverified. |
 | 6.1 | README build/run/deps/transport/pins | Supplied, with Arabic quick start, native and Docker paths, troubleshooting and safety notes. |
 | 6.2 | Firmware uploaded and >=2 servos respond | Firmware compile PASS. Board upload and physical response NOT tested, must be done by student. |
-| 6.2 | Repository link submitted through form | Owner must submit. No form submission or instructor access is claimed. Private repo requires granting instructor access. |
+| 6.2 | Repository link submitted through form | Owner must submit. No form submission or instructor access is claimed. The selected repository is public, so instructor access does not require a collaborator invitation. |
 
 ## Tests that passed on both ROS variants
 
@@ -65,6 +65,6 @@ The same source code is shared, with separate simulator worlds, bridge configs a
 - Check neutral, direction and safe ranges with horns unloaded.
 - Demonstrate GUI -> same trajectory topic -> both visualizers and the physical servos.
 - Capture the real demo as needed by the instructor.
-- Add the instructor as collaborator to the private repo or choose an acceptable visibility, then submit the repo link through the announced form.
+- Check that the instructor can open the selected public repository, then submit its link through the announced form.
 
 The files are implemented and software-tested. The assignment is not described as fully completed because the real hardware and submission steps remain.

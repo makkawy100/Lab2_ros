@@ -18,7 +18,7 @@ sudo apt install -y ros-humble-ros-gz ros-humble-rviz2 \
   python3-rosdep python3-serial python3-tk git build-essential
 
 cd ~
-git clone https://github.com/makkawy100/ros2-robotic-arm.git
+git clone https://github.com/makkawy100/Lab2_ros.git ros2-robotic-arm
 cd ros2-robotic-arm
 # If this repository was already cloned, use git pull instead of cloning again.
 # Only if rosdep was never initialized before:

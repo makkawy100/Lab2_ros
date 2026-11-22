@@ -49,7 +49,7 @@ sudo apt install -y ros-jazzy-desktop ros-jazzy-ros-gz \
   python3-rosdep python3-serial python3-tk git build-essential
 source /opt/ros/jazzy/setup.bash
 
-git clone https://github.com/makkawy100/ros2-robotic-arm.git
+git clone https://github.com/makkawy100/Lab2_ros.git ros2-robotic-arm
 cd ros2-robotic-arm
 # Only if rosdep has never been initialized on this machine:
 # sudo rosdep init
@@ -99,7 +99,7 @@ sudo apt update
 sudo apt install -y docker.io xauth git
 sudo systemctl start docker
 
-git clone https://github.com/makkawy100/ros2-robotic-arm.git
+git clone https://github.com/makkawy100/Lab2_ros.git ros2-robotic-arm
 cd ros2-robotic-arm
 sudo docker build -t ros2-arm:jazzy .
 bash tools/docker_run.sh
@@ -294,7 +294,7 @@ The smoke tests launch and stop their own simulation/bridge; they overwrite repo
 
 ## 7. Submission
 
-The repository is private at the owner's request. A doctor/instructor cannot view a private repository just by receiving its URL. Before submission, the owner must either add the instructor as a collaborator under repository Settings, or choose to change visibility to one the course accepts. A ZIP is a useful backup but does not replace the assignment's required GitHub repository link unless the instructor agrees. Do not publish access tokens or board credentials.
+The selected repository is public with the owner's approval, so the instructor can open its URL without collaborator access. The owner still needs to submit the repository link through the course form. A ZIP is a useful backup but does not replace the required repository link unless the instructor agrees. Do not publish access tokens or board credentials.
 
 ## Sources
 
