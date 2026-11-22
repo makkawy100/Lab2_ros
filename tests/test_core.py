@@ -74,10 +74,10 @@ class DescriptionTests(unittest.TestCase):
         self.assertEqual({l.get('name') for l in self.root.findall('link')}-children,{'base_link'})
         self.assertEqual(len(children),4)
     def test_world(self):
-        w=E.parse(ROOT/'src/arm_simulation/worlds/arm_world.sdf').getroot().find('world')
+        w=E.parse(ROOT/'src/arm_simulation/worlds/arm_world_fortress.sdf').getroot().find('world')
         arm=w.find("model[@name='assignment_arm']")
         self.assertEqual(arm.find("joint[@name='mount_to_world']/parent").text,'world')
         for j in JOINTS:self.assertIsNotNone(arm.find(f"joint[@name='{j}']"))
-        self.assertEqual(len(arm.findall("plugin[@name='gz::sim::systems::JointPositionController']")),4)
+        self.assertEqual(len(arm.findall("plugin[@name='ignition::gazebo::systems::JointPositionController']")),4)
 
 if __name__=='__main__':unittest.main(verbosity=2)

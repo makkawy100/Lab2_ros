@@ -1,71 +1,67 @@
 # ROS 2 Robotic Arm Assignment
 
-A four-revolute-joint arm with URDF, Gazebo Harmonic simulation, RViz2 feedback, a Python trajectory publisher, a slider GUI, and a two-servo Arduino USB bridge.
+A four-revolute-joint arm with URDF, Gazebo Fortress simulation, RViz2 feedback, a Python trajectory publisher, a slider GUI, and a two-servo Arduino USB bridge. Target platform: **Ubuntu 22.04 + ROS 2 Humble + Gazebo Fortress**.
 
-**Two separate tested variants:**
+This is the only variant on the main branch. A Jazzy/Harmonic variant existed earlier and was removed at the owner's request; it stays available in git history (commit `d504e19` and its parents) if it is ever needed again.
 
-| Your machine | Use this guide | Launch |
-|---|---|---|
-| Ubuntu 22.04 + ROS 2 Humble | [Humble/Fortress quick start](docs/HUMBLE.md) | `simulation_humble.launch.py` |
-| Ubuntu 24.04 + ROS 2 Jazzy | Native steps below | `simulation.launch.py` |
-
-Both use modern Gazebo, not Gazebo Classic. Do not source Humble and Jazzy in one terminal. Use separate workspace build/install folders when switching distributions. The optional Jazzy Docker path remains untested.
-
-The assignment PDF recommends modern `gz sim` with Jazzy in Section 3. The final deliverable is a repository link. Real board upload, servo response, and the physical full-pipeline demonstration still need to be done by the student. See [verification](docs/VERIFICATION.md).
+The assignment PDF recommends modern `gz sim` with Jazzy in Section 3, but does not state that Jazzy is mandatory. This project uses the officially paired modern Gazebo for Humble: **Gazebo Fortress** (`ign gazebo`, version 6), not Gazebo Classic (`gazebo`). The final deliverable is a repository link. Real board upload, servo response, and the physical full-pipeline demonstration still need to be done by the student. See [verification](docs/VERIFICATION.md).
 
 ## ابدأ من هنا
 
-- لو جهازك Ubuntu 22.04 وعليه Humble، افتح [دليل Humble](docs/HUMBLE.md). النسخة دي اتجربت على Humble وGazebo Fortress فعليا، ومش محتاج تشيل Humble.
-- لو عندك Ubuntu 24.04 وROS 2 Jazzy، نفّذ خطوات التشغيل المباشر.
+- النسخة دي لجهاز Ubuntu 22.04 عليه ROS 2 Humble، واتجربت فعليا على Humble وGazebo Fortress. مش محتاج تشيل Humble ولا تنزل أي ROS تاني.
 - أول تشغيل للمحاكاة من غير سيرفوهات. الهاردوير مقفول افتراضيا، ومش هيتفتح غير لما تختار `hardware:=true dry_run:=false`.
 - بعد فتح المحاكاة، شغّل أداة السلايدرز، غيّر الزوايا واضغط **Send trajectory**. المفروض نفس الحركة تظهر في Gazebo وRViz2.
-- النسختين اتبنوا واتجربوا فعليا، Jazzy مع Harmonic وHumble مع Fortress، وفيه صور ونتائج اختبارات. تجربة السيرفوهات الحقيقية ورفع الكود على البوردة لسه مطلوبين.
+- فيه صور ونتائج اختبارات حقيقية في `test_results/`. تجربة السيرفوهات الحقيقية ورفع الكود على البوردة لسه مطلوبين.
 
 ## Repository layout
 
 ```text
 src/
   arm_description/   URDF and RViz configuration
-  arm_simulation/    Separate Harmonic/Fortress worlds, bridges and launches
+  arm_simulation/    Fortress world, bridge config and launch
   arm_control/       trajectory publisher, slider GUI, interpolation adapter
   arm_hardware/      USB serial bridge
 firmware/arm_servos/  Arduino Uno/Nano sketch and strict packet parser
 tools/               world generator and live smoke tests
 tests/               Python and C++ tests
-docs/                requirement checklist and test notes
+docs/                Humble guide and requirement checklist
 test_results/        actual test reports and screenshots
 ```
 
 These four packages are all project-specific packages. Standard ROS/Gazebo/Arduino dependencies are installed separately, not vendored into this repository.
 
-## 1. Native Ubuntu 24.04 + Jazzy
+## 1. Install and run (Ubuntu 22.04 + ROS 2 Humble)
 
-First install ROS 2 Jazzy using the [official Ubuntu instructions](https://docs.ros.org/en/jazzy/Installation/Ubuntu-Install-Debs.html). The commands here assume `/opt/ros/jazzy/setup.bash` exists and the ROS apt repository is configured.
+These commands assume ROS 2 Humble and its apt repository are already installed on native Ubuntu 22.04 (`/opt/ros/humble/setup.bash` exists). If not, install it first using the [official Humble instructions](https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debs.html).
+
+Use a fresh terminal with only Humble sourced:
 
 ```bash
+source /opt/ros/humble/setup.bash
 sudo apt update
-sudo apt install -y ros-jazzy-desktop ros-jazzy-ros-gz \
-  ros-jazzy-robot-state-publisher python3-colcon-common-extensions \
+sudo apt install -y ros-humble-ros-gz ros-humble-rviz2 \
+  ros-humble-robot-state-publisher python3-colcon-common-extensions \
   python3-rosdep python3-serial python3-tk git build-essential
-source /opt/ros/jazzy/setup.bash
 
+cd ~
 git clone https://github.com/makkawy100/Lab2_ros.git ros2-robotic-arm
 cd ros2-robotic-arm
+# If this repository was already cloned, use git pull instead of cloning again.
 # Only if rosdep has never been initialized on this machine:
 # sudo rosdep init
 rosdep update
-rosdep install --from-paths src --ignore-src -r -y --rosdistro jazzy
+rosdep install --from-paths src --ignore-src -r -y --rosdistro humble
 colcon build --symlink-install
 source install/setup.bash
-ros2 launch arm_simulation simulation.launch.py
+ros2 launch arm_simulation simulation_humble.launch.py
 ```
 
-This opens Gazebo and RViz2. The SDF world already contains the arm, generated from the committed URDF. Simulation starts unpaused. RViz uses `base_link` as its fixed frame and receives the actual Gazebo joint feedback.
+This opens Gazebo Fortress and RViz2. The SDF world already contains the arm, generated from the committed URDF. Simulation starts unpaused. RViz uses `base_link` as its fixed frame and receives the actual Gazebo joint feedback. No physical servo is enabled.
 
 In a **second terminal**:
 
 ```bash
-source /opt/ros/jazzy/setup.bash
+source /opt/ros/humble/setup.bash
 cd ~/ros2-robotic-arm  # adjust if you cloned elsewhere
 source install/setup.bash
 ros2 run arm_control sliders
@@ -83,54 +79,12 @@ ros2 run arm_control trajectory_publisher --ros-args \
 Headless simulation for testing:
 
 ```bash
-ros2 launch arm_simulation simulation.launch.py headless:=true rviz:=false
+ros2 launch arm_simulation simulation_humble.launch.py headless:=true rviz:=false
 ```
 
-## 2. Optional isolated Jazzy Docker option
+More detail, troubleshooting and test notes: [docs/HUMBLE.md](docs/HUMBLE.md).
 
-For a Humble machine, prefer the tested [native Humble/Fortress variant](docs/HUMBLE.md). This optional path is only for running the Jazzy baseline without installing it into the host.
-
-**Docker build/runtime has not been executed in the development test environment.** The application was tested with real Jazzy and Harmonic outside Docker. This option is supplied to keep the host Humble installation unchanged, not as a claim of container verification. Jazzy/Harmonic is the tested runtime pairing; the native apt installation procedure itself was not rerun.
-
-These steps assume native Linux with a working X11/Xwayland `DISPLAY`. They do not cover Windows/WSL, macOS, a remote SSH display or Wayland-only sessions without Xwayland.
-
-```bash
-sudo apt update
-sudo apt install -y docker.io xauth git
-sudo systemctl start docker
-
-git clone https://github.com/makkawy100/Lab2_ros.git ros2-robotic-arm
-cd ros2-robotic-arm
-sudo docker build -t ros2-arm:jazzy .
-bash tools/docker_run.sh
-```
-
-The script shares only the X11 display authorization needed for GUI access, uses software rendering, and opens Gazebo/RViz. Docker images take disk space and the first build downloads dependencies. It does not install Jazzy into the host Humble environment.
-
-In another host terminal, find the running container and open the sliders:
-
-```bash
-sudo docker exec -it ros2-arm bash -lc \
-  'source /opt/ros/jazzy/setup.bash; source /ws/install/setup.bash; ros2 run arm_control sliders'
-```
-
-A one-shot command inside the same container:
-
-```bash
-sudo docker exec -it ros2-arm bash -lc \
-  'source /opt/ros/jazzy/setup.bash; source /ws/install/setup.bash; ros2 run arm_control trajectory_publisher'
-```
-
-Stop with Ctrl+C in the launch terminal. If a container remains after an interrupted terminal, run `sudo docker stop ros2-arm`. For a headless container, use:
-
-```bash
-sudo docker run --rm --name ros2-arm --network host ros2-arm:jazzy \
-  ros2 launch arm_simulation simulation.launch.py headless:=true rviz:=false
-```
-
-The Docker image entrypoint sources Jazzy and the built workspace for the command. The `docker exec` commands source them explicitly because exec bypasses the image entrypoint.
-
-## 3. Architecture and message contract
+## 2. Architecture and message contract
 
 ```text
 Python publisher / Tk sliders
@@ -173,7 +127,7 @@ ros2 topic pub --once /arm_controller/joint_trajectory \
   '{joint_names: [joint1, joint2, joint3, joint4], points: [{positions: [0.3, -0.4, 0.5, -0.2], time_from_start: {sec: 3, nanosec: 0}}]}'
 ```
 
-## 4. Dimensions and modelling assumptions
+## 3. Dimensions and modelling assumptions
 
 All lengths are in metres in the files.
 
@@ -200,7 +154,7 @@ colcon build --symlink-install
 
 The world uses local ground/light geometry and does not download Fuel models. Gazebo uses ideal velocity-based position actuation; this is kinematic command validation, not validation of real motor torque, payload or contact behaviour.
 
-## 5. Hardware: Arduino Uno/Nano and at least two servos
+## 4. Hardware: Arduino Uno/Nano and at least two servos
 
 Install the official Arduino IDE or CLI, board core `arduino:avr` and library **Servo**. Open `firmware/arm_servos/arm_servos.ino`, choose **Arduino Uno** (or compatible Nano with the right bootloader) and upload to your board.
 
@@ -247,7 +201,7 @@ Host mapping: `clamp(round(offset + direction * radians * 180/pi), 0, 180)`. Def
 First test the bridge **without writing serial**:
 
 ```bash
-ros2 launch arm_simulation simulation.launch.py hardware:=true dry_run:=true
+ros2 launch arm_simulation simulation_humble.launch.py hardware:=true dry_run:=true
 ```
 
 Then publish with the GUI. The bridge prints `TX dry-run: S,...` and no board is accessed.
@@ -255,7 +209,7 @@ Then publish with the GUI. The bridge prints `TX dry-run: S,...` and no board is
 Once the sketch is uploaded, wiring checked and servo power safely supplied, stop the previous launch and run:
 
 ```bash
-ros2 launch arm_simulation simulation.launch.py \
+ros2 launch arm_simulation simulation_humble.launch.py \
   hardware:=true dry_run:=false port:=/dev/ttyACM0
 ```
 
@@ -271,9 +225,7 @@ ros2 run arm_hardware serial_bridge --ros-args \
 
 Close Arduino Serial Monitor before running the bridge. If access is denied, check `ls -l /dev/ttyACM0` and add your user to `dialout`, then log out/in. Do not use `chmod 777` on serial devices. Ports can be `/dev/ttyUSB0` on some boards.
 
-For Docker, reconnect the USB port to the container explicitly by adding `--device /dev/ttyACM0:/dev/ttyACM0` to `tools/docker_run.sh`'s `docker run` command, and pass `hardware:=true dry_run:=false port:=/dev/ttyACM0` as script arguments. Do not expose the device until ready to enable the real servos. Container USB operation has not been tested here.
-
-## 6. Tests you can rerun
+## 5. Tests you can rerun
 
 Run with no other copy of this project active:
 
@@ -281,8 +233,8 @@ Run with no other copy of this project active:
 python3 -m unittest discover -s tests -v
 g++ -std=c++11 -Wall -Wextra -Werror tests/test_protocol.cpp -o /tmp/arm-protocol-test
 /tmp/arm-protocol-test
-# After sourcing Jazzy and install/setup.bash:
-gz sdf -k src/arm_simulation/worlds/arm_world.sdf
+# After sourcing Humble and install/setup.bash:
+ign sdf -k src/arm_simulation/worlds/arm_world_fortress.sdf
 python3 tools/smoke_simulation.py
 python3 tools/smoke_serial.py
 # Optional GUI test requires Xvfb:
@@ -292,7 +244,7 @@ python3 tools/smoke_gui.py
 
 The smoke tests launch and stop their own simulation/bridge; they overwrite reports in `test_results/`. The serial test uses a pseudoterminal, not real hardware. The GUI test sets actual Tk sliders and invokes the actual button callback, then checks actual Gazebo feedback. It is not a physical mouse/servo test.
 
-## 7. Submission
+## 6. Submission
 
 The selected repository is public with the owner's approval, so the instructor can open its URL without collaborator access. The owner still needs to submit the repository link through the course form. A ZIP is a useful backup but does not replace the required repository link unless the instructor agrees. Do not publish access tokens or board credentials.
 
@@ -300,8 +252,3 @@ The selected repository is public with the owner's approval, so the instructor c
 
 - User-supplied assignment PDF, 5 pages, Sections 1 through 6.
 - [Gazebo Fortress/Humble pairing](https://gazebosim.org/docs/fortress/ros_installation/)
-- [Gazebo Harmonic/ROS pairing and installation](https://gazebosim.org/docs/harmonic/ros_installation/)
-- [Gazebo joint position controller parameters](https://gazebosim.org/api/sim/8/classgz_1_1sim_1_1systems_1_1JointPositionController.html)
-- [Gazebo joint-state publisher](https://gazebosim.org/api/sim/8/classgz_1_1sim_1_1systems_1_1JointStatePublisher.html)
-- [ros_gz_bridge Jazzy message mappings and YAML configuration](https://raw.githubusercontent.com/gazebosim/ros_gz/jazzy/ros_gz_bridge/README.md)
-- [Official Jazzy ROS base Docker image definition](https://raw.githubusercontent.com/osrf/docker_images/master/ros/jazzy/ubuntu/noble/ros-base/Dockerfile)

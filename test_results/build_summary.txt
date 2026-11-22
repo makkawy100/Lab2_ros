@@ -1,7 +1,13 @@
-Jazzy + Gazebo Harmonic 8.10.0:
-  colcon build --symlink-install: PASS, all 4 packages built.
-  gz sdf -k: Valid.
-Humble + Gazebo Fortress 6.16.0:
-  colcon build with separate build/install bases: PASS, all 4 packages built.
+Humble + Gazebo Fortress 6.16.0 (re-run on 22 November 2026 after the Jazzy cleanup):
+  colcon build: PASS, all 4 packages built.
+    (plain `colcon build`; the conda runtime's newer setuptools rejects the
+    --symlink-install editable mode, which is an environment limitation, not a
+    project error. On apt Ubuntu 22.04 the documented --symlink-install works.)
   ign sdf -k: Valid.
+  Python unit tests: 20 passed.
+  C++ firmware parser: 32,761 valid pairs + 14 malformed packets passed.
+  Live headless motion test: PASS (4 joints to target and home, real feedback, TF).
+  Serial PTY test: PASS (251 packets, 41 distinct, final S,107,67).
+  GUI callback test: PASS.
+A Jazzy + Harmonic 8.10.0 build also passed earlier on 22 November 2026; that variant was removed from the main branch and remains in git history (commit d504e19 and its parents).
 See docs/VERIFICATION.md for test environments and limits.

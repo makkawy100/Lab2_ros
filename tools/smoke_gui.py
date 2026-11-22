@@ -11,8 +11,9 @@ from rclpy.qos import qos_profile_sensor_data
 from sensor_msgs.msg import JointState
 from trajectory_msgs.msg import JointTrajectory
 from arm_control.core import TOPIC
-VARIANT=os.environ.get('ARM_VARIANT','jazzy')
-PREFIX='humble_' if VARIANT=='humble' else ''
+VARIANT=os.environ.get('ARM_VARIANT','humble')
+if VARIANT!='humble': raise SystemExit('The main branch keeps only the Humble variant. Unset ARM_VARIANT or use ARM_VARIANT=humble.')
+PREFIX='humble_'
 os.environ['IGN_PARTITION']=os.environ['GZ_PARTITION']
 OUT=Path(__file__).resolve().parents[1]/'test_results';OUT.mkdir(exist_ok=True)
 procs=[]
@@ -26,7 +27,7 @@ root=None
 try:
  start(['Xvfb',':96','-screen','0','1200x900x24'],'gui_xvfb');time.sleep(1)
  os.environ.update(DISPLAY=':96',LIBGL_ALWAYS_SOFTWARE='1',QT_QPA_PLATFORM='xcb')
- start(['ros2','launch','arm_simulation','simulation_humble.launch.py' if VARIANT=='humble' else 'simulation.launch.py','headless:=true','rviz:=false'],'gui_sim')
+ start(['ros2','launch','arm_simulation','simulation_humble.launch.py','headless:=true','rviz:=false'],'gui_sim')
  import tkinter as tk
  from arm_control.sliders import SliderWindow
  root=tk.Tk(); ui=SliderWindow(root,n);root.update()

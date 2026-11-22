@@ -20,14 +20,15 @@ from trajectory_msgs.msg import JointTrajectory
 from arm_control.publisher import message
 from arm_control.core import TOPIC, JOINTS
 ROOT=Path(__file__).resolve().parents[1]
-VARIANT=os.environ.get('ARM_VARIANT','jazzy')
-PREFIX='humble_' if VARIANT=='humble' else ''
+VARIANT=os.environ.get('ARM_VARIANT','humble')
+if VARIANT!='humble': raise SystemExit('The main branch keeps only the Humble variant. Unset ARM_VARIANT or use ARM_VARIANT=humble.')
+PREFIX='humble_'
 os.environ['IGN_PARTITION']=os.environ['GZ_PARTITION']
 OUT=ROOT/'test_results';OUT.mkdir(exist_ok=True)
 
 def main():
     log=(OUT/(PREFIX+'live_simulation.log')).open('w')
-    launch=subprocess.Popen(['ros2','launch','arm_simulation','simulation_humble.launch.py' if VARIANT=='humble' else 'simulation.launch.py','headless:=true','rviz:=false','hardware:=true','dry_run:=true'],stdout=log,stderr=subprocess.STDOUT,start_new_session=True)
+    launch=subprocess.Popen(['ros2','launch','arm_simulation','simulation_humble.launch.py','headless:=true','rviz:=false','hardware:=true','dry_run:=true'],stdout=log,stderr=subprocess.STDOUT,start_new_session=True)
     rclpy.init(); n=Node('assignment_smoke_test')
     states=[]; transforms=set()
     n.create_subscription(JointState,'/joint_states',lambda m: states.append((time.monotonic(),dict(zip(m.name,m.position)))),qos_profile_sensor_data)

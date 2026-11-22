@@ -1,8 +1,0 @@
-{
-  "status": "PASS",
-  "test": "Real ROS + pyserial pseudoterminal; not physical servos",
-  "packet_count": 250,
-  "distinct_packets": 41,
-  "first": "S,90,90",
-  "last": "S,107,67"
-}

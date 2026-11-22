@@ -2,8 +2,9 @@
 import os, subprocess, time, signal
 from pathlib import Path
 from process_cleanup import stop_tree
-VARIANT=os.environ.get('ARM_VARIANT','jazzy')
-PREFIX='humble_' if VARIANT=='humble' else ''
+VARIANT=os.environ.get('ARM_VARIANT','humble')
+if VARIANT!='humble': raise SystemExit('The main branch keeps only the Humble variant. Unset ARM_VARIANT or use ARM_VARIANT=humble.')
+PREFIX='humble_'
 os.environ['ROS_DOMAIN_ID']='74'
 os.environ['GZ_PARTITION']='arm_visual_test'
 os.environ['IGN_PARTITION']='arm_visual_test'
@@ -16,7 +17,7 @@ try:
  start(['Xvfb',':95','-screen','0','1600x1000x24'],'xvfb')
  os.environ.update(DISPLAY=':95',LIBGL_ALWAYS_SOFTWARE='1',QT_X11_NO_MITSHM='1',QT_QPA_PLATFORM='xcb')
  time.sleep(1)
- start(['ros2','launch','arm_simulation','simulation_humble.launch.py' if VARIANT=='humble' else 'simulation.launch.py'],'visual_launch')
+ start(['ros2','launch','arm_simulation','simulation_humble.launch.py'],'visual_launch')
  time.sleep(15)
  print(subprocess.run(['xdotool','search','--onlyvisible','--name','.'],capture_output=True,text=True).stdout)
  subprocess.run(['/usr/bin/python3','-c',f'from PIL import ImageGrab;ImageGrab.grab().save({str(OUT/(PREFIX+"desktop_initial.png"))!r})'])

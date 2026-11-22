@@ -1,10 +1,10 @@
 # Humble + Gazebo Fortress: Ubuntu 22.04
 
-دي النسخة المناسبة لجهازك لو عليه ROS 2 Humble بالفعل. مش محتاج تشيل Humble أو تنزل Jazzy عشان تجربها.
+دي النسخة المناسبة لجهازك لو عليه ROS 2 Humble بالفعل. مش محتاج تشيل Humble أو تنزل Jazzy عشان تجربها. Humble هو الهدف الأساسي والوحيد للمشروع على الفرع الرئيسي.
 
-The PDF recommends Jazzy with modern Gazebo, but does not state Jazzy is mandatory. This separate launch uses **Humble + Gazebo Fortress (`ign gazebo`, version 6)**. It is not Gazebo Classic (`gazebo`). The Jazzy/Harmonic launch is preserved separately.
+The PDF recommends Jazzy with modern Gazebo, but does not state Jazzy is mandatory. This project uses **Humble + Gazebo Fortress (`ign gazebo`, version 6)**, the officially supported pairing for Humble. It is not Gazebo Classic (`gazebo`).
 
-Both share the same URDF, controller nodes, GUI and Arduino firmware. Only simulator world/plugin naming, bridge message namespaces and launch selection differ.
+An earlier Jazzy/Harmonic variant was removed from the main branch at the owner's request. It remains in git history (commit `d504e19` and its parents) if it is ever needed again.
 
 ## Install and build
 
@@ -80,33 +80,33 @@ After sourcing the workspace:
 ```bash
 python3 -m unittest discover -s tests -v
 ign sdf -k src/arm_simulation/worlds/arm_world_fortress.sdf
-ARM_VARIANT=humble python3 tools/smoke_simulation.py
-ARM_VARIANT=humble python3 tools/smoke_serial.py
+python3 tools/smoke_simulation.py
+python3 tools/smoke_serial.py
 # Optional actual Tk callback test on a virtual display:
 sudo apt install -y xvfb
-ARM_VARIANT=humble python3 tools/smoke_gui.py
+python3 tools/smoke_gui.py
 ```
 
 Rebuild the Fortress world after a URDF change:
 
 ```bash
-python3 tools/generate_world.py --variant fortress
+python3 tools/generate_world.py
 colcon build --symlink-install
 ```
 
-## Important differences from Jazzy
+## Version notes
 
-| Item | Humble/Fortress | Jazzy/Harmonic |
-|---|---|---|
-| Ubuntu standard pairing | 22.04 | 24.04 |
-| Project launch | `simulation_humble.launch.py` | `simulation.launch.py` |
-| Simulator command | `ign gazebo` | `gz sim` |
-| World | `arm_world_fortress.sdf` | `arm_world.sdf` |
-| Bridge config | `bridge_fortress.yaml` | `bridge.yaml` |
-| Transport types | `ignition.msgs.*` | `gz.msgs.*` |
-| Physical firmware | Same | Same |
+| Item | This project |
+|---|---|
+| Ubuntu | 22.04 |
+| ROS | Humble |
+| Project launch | `simulation_humble.launch.py` |
+| Simulator command | `ign gazebo` |
+| World | `arm_world_fortress.sdf` |
+| Bridge config | `bridge_fortress.yaml` |
+| Transport types | `ignition.msgs.*` |
 
-Do not install `ros-humble-ros-gzharmonic` for this variant. That is a non-default Humble/Harmonic pairing and can conflict with the official Humble/Fortress packages. Do not mix the build/install folders of a workspace built under different ROS distributions. If changing distros, use a separate clone or build/install bases.
+Do not install `ros-humble-ros-gzharmonic` for this project. That is a non-default Humble/Harmonic pairing and can conflict with the official Humble/Fortress packages.
 
 ## What was actually tested
 
@@ -114,6 +114,6 @@ A real **Humble + Fortress 6.16.0** runtime was provisioned using RoboStack/cond
 
 This was not a clean apt-based installation on the student's machine. Firmware was compiled for Uno, not uploaded to a physical board. Actual servos and USB hardware remain to be tested. See [full verification](VERIFICATION.md).
 
-If Gazebo opens but is blank, first check you used `simulation_humble.launch.py`, not the Jazzy launch. For software-rendering problems, try setting `LIBGL_ALWAYS_SOFTWARE=1` before launching. If DDS discovery is stale, close other project runs and use a fresh terminal. If you stop Gazebo, stop the whole launch before starting a new one; do not leave two simulators controlling the same topics.
+If Gazebo opens but is blank, try setting `LIBGL_ALWAYS_SOFTWARE=1` before launching. If DDS discovery is stale, close other project runs and use a fresh terminal. If you stop Gazebo, stop the whole launch before starting a new one; do not leave two simulators controlling the same topics.
 
 Official simulator pairing/install source: https://gazebosim.org/docs/fortress/ros_installation/

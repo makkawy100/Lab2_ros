@@ -9,7 +9,7 @@ from rclpy.node import Node
 from trajectory_msgs.msg import JointTrajectory
 from arm_control.publisher import message
 from arm_control.core import TOPIC
-PREFIX='humble_' if os.environ.get('ARM_VARIANT')=='humble' else ''
+PREFIX='humble_'
 OUT=Path(__file__).resolve().parents[1]/'test_results';OUT.mkdir(exist_ok=True)
 master,slave=pty.openpty();port=os.ttyname(slave)
 f=(OUT/(PREFIX+'serial_pty.log')).open('w')
